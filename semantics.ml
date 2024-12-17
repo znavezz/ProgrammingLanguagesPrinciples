@@ -1,12 +1,20 @@
 open Ast (* This opens the Ast module so you don't need to prefix every type *)
 
+(* Helper function for integer exponentiation *)
+let rec pow base exp =
+  if exp = 0 then 1
+  else base * pow base (exp - 1);;
+
 (* solve_a: aexp -> state -> int *) 
 let rec solve_a e s = match e with
     | Ast.Num m -> m
     | Var x -> s x
     | Add (e1, e2) -> solve_a e1 s + solve_a e2 s
     | Mult (e1, e2) -> solve_a e1 s * solve_a e2 s
-    | Sub (e1, e2) -> solve_a e1 s - solve_a e2 s;;
+    | Sub (e1, e2) -> solve_a e1 s - solve_a e2 s
+    | Shl (e1, e2) -> solve_a e1 s * pow 2 (solve_a e2 s)
+    | Shr (e1, e2) -> solve_a e1 s / pow 2 (solve_a e2 s);;
+
 
 let not x = 
     match x with
