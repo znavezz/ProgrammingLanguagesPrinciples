@@ -31,4 +31,12 @@ let test2 = Comp (Ass ("x", Num 3), Ass ("x", Add(Var "x", Num 1)));;
 let test3 = If(Neg(Aeq(Var "x", Num 1)),Ass ("x", Num 3),Ass ("x", Num 7));;
 let test4 = Comp (Ass("y", Num 1), While(Neg(Aeq(Var "x", Num 0)),Comp(Ass("y", Mult(Var "y", Var "x")),Ass("x", Sub(Var "x", Num 1)))));; 
 
-
+(* Additional tests for Shl and Shr *)
+let test_shl = Ass ("x", Shl (Num 3, Num 2));;        (* 3 << 2 = 12 *)
+let test_shr = Ass ("x", Shr (Num 16, Num 3));;      (* 16 >> 3 = 2 *)
+let test_shl_zero = Ass ("x", Shl (Num 5, Num 0));;  (* Shift left by 0 *)
+let test_shr_zero = Ass ("x", Shr (Num 5, Num 0));;  (* Shift right by 0 *)
+let test_shl_negative = Ass ("x", Shl (Num (-4), Num 2));; (* Negative number left shift *)
+let test_shr_negative = Ass ("x", Shr (Num (-16), Num 2));; (* Negative number right shift *)
+let test_shl_large = Ass ("x", Shl (Num 1, Num 30));; (* Large shift left *)
+let test_shr_large = Ass ("x", Shr (Num 1073741824, Num 30));; (* Large shift right *)
