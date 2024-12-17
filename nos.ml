@@ -107,4 +107,52 @@ let () =
   print_int (let new_state = nos (test_repeat3, s0) in new_state "b");
   print_endline "";
 
+ (* Bubble Sort Test *)
+  print_endline "\n--- Bubble Sort Test for n = 5 ---";
 
+  (* Define Variables and Values *)
+  let vars = ["x1"; "x2"; "x3"; "x4"; "x5"] in
+  let values = [3; 5; 1; -2; 100] in
+
+  (* Initialize State *)
+  let initial_state =
+    List.fold_left2 (fun state var value -> update var (Num value) state)
+      default_state vars values
+  in
+
+  (* Print Initial State *)
+  print_endline "Initial State:";
+  List.iter (fun var -> Printf.printf "%s = %d\n" var (initial_state var)) vars;
+
+  (* Generate Bubble Sort Statement *)
+  let rec generate_bubble_sort vars =
+    let n = List.length vars in
+    let rec outer_loop i acc =
+      if i >= n then acc
+      else
+        let rec inner_loop j acc_inner =
+          if j >= n - i - 1 then acc_inner
+          else
+            let var1 = List.nth vars j in
+            let var2 = List.nth vars (j + 1) in
+            let swap_condition = Gte (Var var1, Var var2) in
+            let swap_statement =
+              Comp (Ass ("tmp", Var var1),
+                    Comp (Ass (var1, Var var2),
+                          Ass (var2, Var "tmp")))
+            in
+            inner_loop (j + 1) (Comp (acc_inner, If (swap_condition, swap_statement, Skip)))
+        in
+        outer_loop (i + 1) (inner_loop 0 acc)
+    in
+    outer_loop 0 Skip
+  in
+
+  let bubble_sort_stm = generate_bubble_sort vars in
+
+  (* Run Bubble Sort *)
+  let final_state = nos (bubble_sort_stm, initial_state) in
+
+  (* Print Final State *)
+  print_endline "Sorted State:";
+  List.iter (fun var -> Printf.printf "%s = %d\n" var (final_state var)) vars;
