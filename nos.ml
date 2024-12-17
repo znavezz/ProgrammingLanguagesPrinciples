@@ -33,6 +33,18 @@ let () =
   print_int (let new_state = nos (test4, s1) in new_state "y");
   print_endline "";
 
+  print_string "a = ";
+  print_int (let new_state = nos (test5, s0) in new_state "a");
+  print_endline "";
+
+  print_string "b = ";
+  print_int (let new_state = nos (test5, s0) in new_state "b");
+  print_endline "";
+
+  print_string "c = ";
+  print_int (let new_state = nos (test5, s0) in new_state "c");
+  print_endline "";
+
   print_string "x = ";
   print_int (let new_state = nos (test_shl, s0) in new_state "x");
   print_endline "";
