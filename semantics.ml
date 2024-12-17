@@ -22,15 +22,16 @@ let not x =
         | false -> true;;
 
 
- (* solve_b: bexp -> state -> bool *) 
- let rec solve_b e s = match e with
-    Ast.True -> true
-    | False -> false
-    | Neg e1 -> not (solve_b e1 s)
-    | Beq (e1, e2) -> (solve_b e1 s == solve_b e2 s)
-    | Aeq (e1, e2) -> (solve_a e1 s == solve_a e2 s)
-    | Gte (e1, e2) -> (solve_a e1 s >= solve_a e2 s)
-    | And (e1, e2) -> (solve_b e1 s && solve_b e2 s);;
+(* solve_b: bexp -> state -> string 
+   Evaluates a boolean expression and returns "tt" for true and "ff" for false. *) 
+let rec solve_b e s = match e with
+  | Aeq (e1, e2) -> if solve_a e1 s = solve_a e2 s then "tt" else "ff"
+  | Beq (b1, b2) -> if solve_b b1 s = solve_b b2 s then "tt" else "ff"
+  | Gte (e1, e2) -> if solve_a e1 s >= solve_a e2 s then "tt" else "ff"
+  | Neg b1 -> if solve_b b1 s = "tt" then "ff" else "tt"
+  | And (b1, b2) -> if solve_b b1 s = "tt" && solve_b b2 s = "tt" then "tt" else "ff"
+  | _ -> failwith "Unsupported boolean expression";;
+
 
 
 (* state update : to get a new state *) 

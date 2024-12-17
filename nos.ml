@@ -6,9 +6,9 @@ let rec nos (stm, state) = match stm with
   | Ass (x, e) -> update x e state
   | Skip -> state
   | Comp (s1, s2) -> nos (s2, nos (s1, state))
-  | If (b, s1, s2) -> if solve_b b state then nos (s1, state) else nos (s2, state)
+  | If (b, s1, s2) -> if solve_b b state = "tt" then nos (s1, state) else nos (s2, state)
   | While (b, s) -> 
-      if solve_b b state then nos (While (b, s), nos (s, state)) 
+      if solve_b b state = "tt" then nos (While (b, s), nos (s, state)) 
       else state;;
 
 (* Tests *)
