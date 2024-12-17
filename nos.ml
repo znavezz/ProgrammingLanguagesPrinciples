@@ -9,7 +9,11 @@ let rec nos (stm, state) = match stm with
   | If (b, s1, s2) -> if solve_b b state = "tt" then nos (s1, state) else nos (s2, state)
   | While (b, s) -> 
       if solve_b b state = "tt" then nos (While (b, s), nos (s, state)) 
-      else state;;
+      else state
+  | Repeat (s, b) -> 
+      let state' = nos (s, state) in
+      if solve_b b state' = "tt" then state'
+      else nos (Repeat (s, b), state');;
 
 (* Tests *)
 let () =
@@ -76,3 +80,31 @@ let () =
   print_string "x = ";
   print_int (let new_state = nos (test_shr_large, s0) in new_state "x");
   print_endline "";
+
+  (* Test Repeat 1: Increment x until x >= 5 *)
+  print_endline "Test Repeat 1: Increment x until x >= 5";
+  print_string "x = ";
+  print_int (let new_state = nos (test_repeat1, s0) in new_state "x");
+  print_endline "";
+
+  print_endline "Test Repeat 2: Increment x and double y until x >= 3";
+  print_string "x = ";
+  print_int (let new_state = nos (test_repeat2, update "y" (Num 1) s0) in new_state "x");
+  print_endline "";
+  print_string "y = ";
+  print_int (let new_state = nos (test_repeat2, update "y" (Num 1) s0) in new_state "y");
+  print_endline "";
+
+
+  (* Test Repeat 3: Decrement a and increment b until a = 0 *)
+  print_endline "Test Repeat 3: Decrement a and increment b until a = 0";
+
+  print_string "a = ";
+  print_int (let new_state = nos (test_repeat3, s0) in new_state "a");
+  print_endline "";
+
+  print_string "b = ";
+  print_int (let new_state = nos (test_repeat3, s0) in new_state "b");
+  print_endline "";
+
+
